@@ -27,7 +27,7 @@ type Video struct {
 	PublishDate     time.Time
 	DASHManifestURL string
 	HLSManifestURL  string
-	CaptionTrack    string
+	CaptionTrackURL string
 	AudioURL        string
 	VideoURL        string
 }
@@ -61,7 +61,7 @@ func (y *YoutubeClient) VideoForId(id string) (*Video, error) {
 		PublishDate:     video.PublishDate,
 		DASHManifestURL: video.DASHManifestURL,
 		HLSManifestURL:  video.HLSManifestURL,
-		CaptionTrack:    json3Url,
+		CaptionTrackURL: json3Url,
 		AudioURL:        audioFormat.URL,
 		VideoURL:        hdFormat.URL,
 	}, nil

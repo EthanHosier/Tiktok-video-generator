@@ -28,6 +28,13 @@ func main() {
 	fmt.Printf("vid: %+v\n", vid)
 
 	c := captions.NewCaptionsClient()
-	c.CaptionsFromJson("captions/timedtext.json", captions.CaptionsASS)
+	cs, err := c.CaptionsFrom(vid.CaptionTrackURL, captions.CaptionsASS)
+	if err != nil {
+		fmt.Printf("error getting captions: %v\n", err)
+		return
+	}
+
+	fmt.Printf("cs: %s\n", cs)
+
 	// c.CaptionsFromXml("captions/timedtext.xml", captions.CaptionsASS)
 }
