@@ -2,6 +2,7 @@ package youtube
 
 import (
 	"fmt"
+	"net/url"
 	"time"
 
 	"github.com/kkdai/youtube/v2"
@@ -46,6 +47,8 @@ func (y *YoutubeClient) VideoForId(id string) (*Video, error) {
 	hdFormat := video.Formats[0]
 	audioFormat := video.Formats.Itag(140)[0]
 
+	json3Url, err := replaceWithJson3Url(video.CaptionTracks[0].BaseURL)
+
 	return &Video{
 		ID:              video.ID,
 		Title:           video.Title,
@@ -58,8 +61,21 @@ func (y *YoutubeClient) VideoForId(id string) (*Video, error) {
 		PublishDate:     video.PublishDate,
 		DASHManifestURL: video.DASHManifestURL,
 		HLSManifestURL:  video.HLSManifestURL,
-		CaptionTrack:    video.CaptionTracks[0].BaseURL,
+		CaptionTrack:    json3Url,
 		AudioURL:        audioFormat.URL,
 		VideoURL:        hdFormat.URL,
 	}, nil
+}
+
+func replaceWithJson3Url(originalURL string) (string, error) {
+	parsedURL, err := url.Parse(originalURL)
+	if err != nil {
+		return "", fmt.Errorf("error parsing URL: %v", err)
+	}
+
+	query := parsedURL.Query()
+	query.Set("fmt", "json3")
+
+	parsedURL.RawQuery = query.Encode()
+	return parsedURL.String(), nil
 }
